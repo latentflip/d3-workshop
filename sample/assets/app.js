@@ -46,7 +46,6 @@ circles.enter().append('circle')
 
 
 function showAwesomeness() {
-  console.log('Updating chart')
   var newYDomain = d3.extent( people.map(function(p) { return p.awesomeness }) )
   yScale.domain(newYDomain);
 
@@ -57,7 +56,6 @@ function showAwesomeness() {
 }
 
 function showWisdom() {
-  console.log('Updating chart')
   var newYDomain = d3.extent( people.map(function(p) { return p.wisdom }) )
   yScale.domain(newYDomain);
 
