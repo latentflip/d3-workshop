@@ -5,6 +5,7 @@
     
     <script src="assets/d3.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <script src="data/people.js"></script>
 
   </head>
   <body>
@@ -27,6 +28,11 @@
       // add a circle of radius 25 that moves from the
       // first circle to the second over the course of
       // two seconds
+
+      svg.append('circle')
+            .attr({cx: 70, cy: 70, r: 25})
+          .transition().duration(2000)
+            .attr({cx: 250, cy: 250})
 
     </script>
   </body>

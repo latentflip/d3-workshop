@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <title>D3 - Lesson 2</title>
+    
+    <script src="assets/d3.js"></script>
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
+
+  </head>
+  <body>
+    
+    <h1>Lesson 2: Binding Data</h1>
+
+    <div id="viz">
+    </div>
+      
+    <script>
+      var svg = d3.select('#viz').append('svg')
+      
+      var data = [
+        { x: 100, y: 100 },
+        { x: 200, y: 200 },
+        { x: 300, y: 300 }
+      ]
+
+      // Step 1 ///////////////////////////////////////
+      // Lets draw a circle for each of our datapoints
+
+      // TODO: 
+      // For each datapoint, add a circle to the canvas
+      // with radius of 25, and centered on it's x and y
+      var circles = svg.selectAll('circle')
+                         .data(data)
+    
+      circles.enter().append('circle')
+                      .attr('cx', function(d) { return d.x })
+                      .attr('cy', function(d) { return d.y })
+                      .attr('r', 25)
+
+
+      
+
+      // Step 2 ///////////////////////////////////////
+      // Let's modify one of the data points, and
+      // update our graphic
+      data[2].y = 25
+
+      // TODO: 
+      // Update the graph with the modified data, animating 
+      // the change over 2 seconds
+
+
+
+
+      // Step 3 ///////////////////////////////////////
+      // Let's add a new datapoint
+      data.push({x: 100, y: 100})
+
+      // TODO:
+      // Update the graph with our new data, growing the
+      // radius of any of our new points from 0 to 10
+
+      
+
+
+      // Step 4 ///////////////////////////////////////
+      // Let's remove the first datapoint
+      data.shift() //Removes the first element of an array
+
+      // TODO:
+      // Update the graph with our new data, shrinking the
+      // radius of any removed data points to zero before 
+      // removing them completely
+
+    </script>
+  </body>
+</html>
