@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <title>D3 - Lesson 2</title>
+    
+    <script src="assets/jquery.js"></script>
+    <script src="assets/d3.js"></script>
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <script src="data/world-countries.js"></script>
+
+  </head>
+  <body>
+    
+    <h1>Lesson 3: Maps of the world!</h1>
+
+    <div id="viz">
+    </div>
+      
+    <script>
+      var height = 500;
+      var width = 960;
+      var svg = d3.select('#viz').append('svg')
+                                    .attr('height', height)
+                                    .attr('width', width)
+      
+      var countriesData = window.countriesData;
+      // This is a big list of all the countries in the world 
+      // in a format that d3 likes
+    </script>
+
+    <script>
+      // Step 1 /////////////////////////////////////////////
+
+      // Setup a mercator projection
+      // A projections is a bit like a scale except it maps 
+      // latitudes and longitudes to pixels
+      // There are a lot of projections:
+      //   https://github.com/mbostock/d3/wiki/Geo-Projections
+      var projection = d3.geo.mercator()
+                               .scale(490)
+      
+
+      // Step 2 ////////////////////////////////////////////
+
+      // Setup a geo path
+      // A path is a magical path drawer, that can take things
+      // listen in a geo format called geojson (lots of geo data
+      // is formatted like this) and draws those shapes onto your
+      // projection
+      var path = d3.geo.path().projection(projection)
+
+
+      // Step 3 /////////////////////////////////////////////
+      // Take our loaded big list of countries and draw it
+      // using our path
+      //
+      // Note how we've grouped them all under a 'countries' group
+      // to make them easier to work with
+      //
+      // We've also used a 'path' element, which I didn't talk about
+      // but is just a freeform path that joins points to make a shape
+      //
+      // The 'path' generator that we pass to .attr('d', path) takes
+      // the geo data and draws a path
+
+      var countries = svg.append('g') // make a group to hold them all
+
+      countries.selectAll('path')
+                  .data(countriesData.features)
+                .enter().append('path')
+                  .attr('d', path) // uses our path to draw the countries
+    
+
+      // Step 4 /////////////////////////////////////////////
+      // Let's render something to it!
+      // The US Geological Survey provide a lot of earthquake data in various formats here
+      //   http://earthquake.usgs.gov/earthquakes/feed/
+
+      // We will render recent earthquakes to our map
+
+      // Make a group to hold our earthquakes
+      var earthquakes = svg.append('g');
+
+      // This will run when we have our data (eqfeed_callback naming is important
+      // learn more about JSONP to know why
+      window.eqfeed_callback = function(earthquakeData) {
+
+        // As always, get all the circles and add our data to it
+        var circles = earthquakes.selectAll('circle')
+                                    .data(earthquakeData.features)
+
+        // Add a circle for each new earthquake
+        circles.enter().append('circle')
+                        .attr('r', 5)
+
+                        // These are complicated, but not really
+                        // We get the location of the earthquake from the data (quake.geometry.coordinates)
+                        // and run it through our projection function to turn it into pixels,
+                        // then grab the first element of the array to get the x coordinate
+                        .attr('cx', function(quake) {
+                          var pixCoords = projection(quake.geometry.coordinates);
+                          return pixCoords[0];
+                        })
+
+                        // Same as above but for the y coordinate
+                        .attr('cy', function(e) {
+                          console.log(e)
+                          var pixCoords = projection(e.geometry.coordinates);
+                          return pixCoords[1];
+                        })
+      }
+
+      $.ajax({
+        url: "http://earthquake.usgs.gov/earthquakes/feed/geojsonp/4.5/month",
+        dataType: 'jsonp'
+      });
+    </script>
+  </body>
+</html>
